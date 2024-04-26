@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build -t antdv3-admin .
+      
+    - name: docker login
+      run: docker login -u qianfuxin -p '${{ secrets.DOCKER_TOKEN }}'
+    - name: change tag
+      run: docker tag image2url:latest qianfuxin/antdv3-admin:latest
+    - name: push image
+      run: docker push qianfuxin/antdv3-admin:latest
