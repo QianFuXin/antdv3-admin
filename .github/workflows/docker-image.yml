@@ -20,6 +20,6 @@ jobs:
     - name: docker login
       run: docker login -u qianfuxin -p '${{ secrets.DOCKER_TOKEN }}'
     - name: change tag
-      run: docker tag image2url:latest qianfuxin/antdv3-admin:latest
+      run: docker tag antdv3-admin:latest qianfuxin/antdv3-admin:latest
     - name: push image
       run: docker push qianfuxin/antdv3-admin:latest
