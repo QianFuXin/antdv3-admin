@@ -1,3 +1,6 @@
 README.md
 .gitignore
 LICENSE
+.eslintrc.cjs
+.prettierrc.json
+jsconfig.json
