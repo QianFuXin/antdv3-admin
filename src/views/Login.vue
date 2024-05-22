@@ -15,25 +15,32 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      username: '',
-      password: ''
-    }
-  },
-  methods: {
-    login() {
-      // 这里仅模拟登录，实际中应发送请求到后端验证用户信息
-      if (this.username === 'user' && this.password === 'pass') {
-        sessionStorage.setItem('token', 'example-token')
-        this.$router.push(this.$route.query.redirect || '/')
-      } else {
-        alert('Incorrect username or password.')
-      }
-    }
-  }
+<script setup>
+import { ref } from 'vue'
+import { loginError, loginSuccess, tokenName } from '@/utils/config.js'
+import { useRoute, useRouter } from 'vue-router'
+import { loginApi } from '@/api/authentication.js'
+import { error, success } from '@/utils/message.js'
+
+const router = useRouter()
+const route = useRoute()
+const username = ref('')
+const password = ref('')
+
+const login = () => {
+  loginApi({
+    identifier: username.value,
+    password: password.value
+  })
+    .then((data) => {
+      sessionStorage.setItem(tokenName, data.jwt)
+      router.push(route.query.redirect || '/')
+      success(loginSuccess)
+    })
+    .catch((err) => {
+      console.log(err)
+      error(loginError)
+    })
 }
 </script>
 

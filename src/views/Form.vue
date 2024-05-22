@@ -61,7 +61,9 @@
   </a-form>
 </template>
 <script setup>
-import { ref, reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import { book } from '@/api/book.js'
+
 const componentDisabled = ref(true)
 const labelCol = {
   style: {
@@ -96,5 +98,12 @@ const options = reactive([
     ]
   }
 ])
+book()
+  .then((data) => {
+    console.log(data)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 const checked = ref(false)
 </script>

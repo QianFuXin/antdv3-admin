@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { notLoginMessage, tokenName } from '@/utils/config.js'
+import { error } from '@/utils/message.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,7 +17,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         {
-          path: '/hello',
+          path: '/book',
           name: 'Hello',
           component: () => import('@/views/Form.vue'),
           meta: { requiresAuth: true }
@@ -33,10 +34,10 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const token = sessionStorage.getItem('token')
+  const token = sessionStorage.getItem(tokenName)
 
   if (requiresAuth && !token) {
-    message.error('请登录！')
+    error(notLoginMessage)
     next({ name: 'Login', query: { redirect: to.fullPath } })
   } else {
     next()
