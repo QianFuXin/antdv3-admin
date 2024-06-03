@@ -6,7 +6,7 @@
       <a-menu v-model:selectedKeys="selectedKeysLeft" theme="dark" mode="inline">
         <a-menu-item key="1">
           <user-outlined />
-          <router-link to="/book">你好</router-link>
+          <router-link to="/table">表格</router-link>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -36,6 +36,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue'
 
 const selectedKeysLeft = ref(['1'])
 const selectedKeysRight = ref(['1'])

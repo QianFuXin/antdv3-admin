@@ -24,8 +24,8 @@ import { error, success } from '@/utils/message.js'
 
 const router = useRouter()
 const route = useRoute()
-const username = ref('')
-const password = ref('')
+const username = ref('qianfuxin')
+const password = ref('qianfuxin')
 
 const login = () => {
   loginApi({
@@ -34,7 +34,7 @@ const login = () => {
   })
     .then((data) => {
       sessionStorage.setItem(tokenName, data.jwt)
-      router.push(route.query.redirect || '/')
+      router.push(route.query.redirect || '/table')
       success(loginSuccess)
     })
     .catch((err) => {

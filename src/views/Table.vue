@@ -1,97 +1,91 @@
 <template>
-  <a-table :columns="columns" :data-source="data">
-    <template #headerCell="{ column }">
-      <template v-if="column.key === 'name'">
-        <span>
-          <smile-outlined />
-          Name
-        </span>
-      </template>
-    </template>
-
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'name'">
-        <a>
-          {{ record.name }}
-        </a>
-      </template>
-      <template v-else-if="column.key === 'tags'">
-        <span>
-          <a-tag
-            v-for="tag in record.tags"
-            :key="tag"
-            :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
-          >
-            {{ tag.toUpperCase() }}
-          </a-tag>
-        </span>
-      </template>
-      <template v-else-if="column.key === 'action'">
-        <span>
-          <a>Invite 一 {{ record.name }}</a>
-          <a-divider type="vertical" />
-          <a>Delete</a>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link">
-            More actions
-            <down-outlined />
-          </a>
-        </span>
-      </template>
-    </template>
-  </a-table>
+  <TableList
+    :data="car.cars"
+    :columns="columns"
+    :delete-func="deleteCar"
+    :rules="rules"
+    :form-state="formState"
+    :add-func="createCar"
+    :update-func="updateCar"
+    :storeUpdate="car.updateCarData"
+  >
+    <a-form-item name="name" label="姓名">
+      <a-input v-model:value="formState.name" />
+    </a-form-item>
+    <a-form-item name="price" label="价格">
+      <a-input-number v-model:value="formState.price" :min="0" :max="1000000" :step="0.1" />
+    </a-form-item>
+  </TableList>
 </template>
-<script lang="ts" setup>
-import { DownOutlined, SmileOutlined } from '@ant-design/icons-vue'
+<script setup>
+import { onMounted, reactive } from 'vue'
+import { createCar, deleteCar, updateCar } from '@/api/car.js'
+import TableList from '@/components/TableList.vue'
+import { useCarListStore } from '@/stores/car.js'
 
+const car = useCarListStore()
 const columns = [
   {
-    name: 'Name',
+    title: '编码',
+    dataIndex: 'id',
+    key: 'id'
+  },
+  {
+    title: '名称',
     dataIndex: 'name',
-    key: 'name'
+    key: 'name',
+    width: '30%'
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age'
+    title: '价格',
+    dataIndex: 'price',
+    key: 'price',
+    customFilterDropdown: true,
+    onFilter: (value, record) =>
+      record.price.toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => {
+          searchInput.value.focus()
+        }, 100)
+      }
+    }
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address'
+    title: '创建时间',
+    dataIndex: 'publishedAt',
+    key: 'publishedAt'
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags'
+    title: '更新时间',
+    dataIndex: 'updatedAt',
+    key: 'updatedAt'
   },
   {
     title: 'Action',
     key: 'action'
   }
 ]
-
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser']
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
-  }
-]
+const formState = reactive({
+  name: '',
+  price: ''
+})
+const rules = {
+  title: [
+    {
+      required: true,
+      message: 'Please input Activity name',
+      trigger: 'change'
+    },
+    {
+      min: 3,
+      max: 5,
+      message: 'Length should be 3 to 5',
+      trigger: 'blur'
+    }
+  ]
+}
+onMounted(() => {
+  car.updateCarData()
+})
 </script>

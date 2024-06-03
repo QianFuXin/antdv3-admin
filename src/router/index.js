@@ -17,12 +17,6 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         {
-          path: '/book',
-          name: 'Hello',
-          component: () => import('@/views/Form.vue'),
-          meta: { requiresAuth: true }
-        },
-        {
           path: '/table',
           name: 'Table',
           component: () => import('@/views/Table.vue'),
@@ -38,7 +32,7 @@ router.beforeEach((to, from, next) => {
 
   if (requiresAuth && !token) {
     error(notLoginMessage)
-    next({ name: 'Login', query: { redirect: to.fullPath } })
+    next({ name: 'Login', query: { redirect: to.fullPath === '/' ? '' : to.fullPath } })
   } else {
     next()
   }
