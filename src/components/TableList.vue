@@ -119,6 +119,11 @@ const editId = ref(null)
 const modalTitle = computed(() => (isEdit.value ? '编辑数据' : '新建数据'))
 function onCancel() {
   formRef.value.resetFields()
+  if (isEdit.value) {
+    Object.keys(props.formState).forEach((key) => {
+      props.formState[key] = ''
+    })
+  }
   isEdit.value = false
 }
 const onOk = () => {
